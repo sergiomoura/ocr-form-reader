@@ -8,5 +8,9 @@
 
 <ion-content padding>
 	<button ion-button full (click)="onGetFormPictureClick()" >Get Form Picture</button>
+	<button ion-button full (click)="onRecognizeFieldsClick()" [disabled]="!imgData">Recognize Fields</button>
 	<img *ngIf="imgData" [src]="imgData">
+	<div>
+		{{ imgText }}
+	</div>
 </ion-content>

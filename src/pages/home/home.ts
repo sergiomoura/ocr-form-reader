@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import * as Tesseract from "tesseract.js";
 
 @Component({
 	selector: 'page-home',
@@ -9,6 +10,7 @@ export class HomePage {
 
 	private cameraOptions:CameraOptions;
 	public imgData:string;
+	public imgText:string;
 
 	constructor(
 		private camera:Camera
@@ -18,9 +20,10 @@ export class HomePage {
 			destinationType: this.camera.DestinationType.DATA_URL,
 			encodingType: this.camera.EncodingType.JPEG,
 			mediaType: this.camera.MediaType.PICTURE,
-			targetWidth:1536, // <== 2 * 768
-			correctOrientation:false,
-			allowEdit:true
+			//targetWidth:3072, // <== 2 * 768
+			correctOrientation:true,
+			allowEdit:true,
+			saveToPhotoAlbum:false
 		}
 	}
 
@@ -35,7 +38,23 @@ export class HomePage {
 		);
 	}
 
-	/**
-	 * Gets the first dark pixel of the picture (top left)
-	 */
+	onRecognizeFieldsClick() {
+		Tesseract.recognize(this.imgData,'por')
+		.catch(
+			err => {
+				console.error(err);
+			}
+		)
+		.progress(
+			progress => {
+				console.dir(progress);
+			}
+		)
+		.then(
+			result => {
+				this.imgText = result.text;
+				console.dir(result);
+			}
+		)
+	}
 }
